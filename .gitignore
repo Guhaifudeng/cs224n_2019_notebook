@@ -131,3 +131,6 @@ data
 outputs
 
 .idea/
+
+*.npy
+*.pickle

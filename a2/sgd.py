@@ -86,6 +86,9 @@ def sgd(f, x0, step, iterations, postprocessing=None, useSaved=False,
 
         loss = None
         ### YOUR CODE HERE
+        loss,gred = f(x)
+        # gred --梯度,step --学习率  为什么用减号
+        x = x - gred*step
 
         ### END YOUR CODE
 
