@@ -21,7 +21,7 @@ from utils.parser_utils import minibatches, load_and_preprocess_data, AverageMet
 # -----------------
 # Primary Functions
 # -----------------
-def train(parser, train_data, dev_data, output_path, batch_size=1024, n_epochs=10, lr=0.0005):
+def train(parser:ParserModel, train_data, dev_data, output_path, batch_size=1024, n_epochs=10, lr=0.0005):
     """ Train the neural dependency parser.
 
     @param parser (Parser): Neural Dependency Parser
@@ -46,7 +46,8 @@ def train(parser, train_data, dev_data, output_path, batch_size=1024, n_epochs=1
     ###     Adam Optimizer: https://pytorch.org/docs/stable/optim.html
     ###     Cross Entropy Loss: https://pytorch.org/docs/stable/nn.html#crossentropyloss
 
-
+    optimizer = optim.Adam(parser.model.parameters() , lr=lr)
+    loss_func = nn.CrossEntropyLoss()
     ### END YOUR CODE
 
     for epoch in range(n_epochs):
@@ -59,7 +60,7 @@ def train(parser, train_data, dev_data, output_path, batch_size=1024, n_epochs=1
         print("")
 
 
-def train_for_epoch(parser, train_data, dev_data, optimizer, loss_func, batch_size):
+def train_for_epoch(parser:ParserModel, train_data, dev_data, optimizer, loss_func, batch_size):
     """ Train the neural dependency parser for single epoch.
 
     Note: In PyTorch we can signify train versus test and automatically have
@@ -100,6 +101,11 @@ def train_for_epoch(parser, train_data, dev_data, optimizer, loss_func, batch_si
             ###     Optimizer Step: https://pytorch.org/docs/stable/optim.html#optimizer-step
 
 
+            predicts = parser.model(train_x)
+            loss = loss_func(predicts, train_y)
+            loss.backward()
+            optimizer.step()
+
             ### END YOUR CODE
             prog.update(1)
             loss_meter.update(loss.item())
@@ -117,8 +123,8 @@ if __name__ == "__main__":
     # Note: Set debug to False, when training on entire corpus
     debug = True
     # debug = False
-
-    assert(torch.__version__ == "1.0.0"),  "Please install torch version 1.0.0"
+    print(torch.__version__)
+    #assert(torch.__version__ == "1..0"),  "Please install torch version 1.0.0"
 
     print(80 * "=")
     print("INITIALIZING")

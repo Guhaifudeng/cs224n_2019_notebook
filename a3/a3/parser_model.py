@@ -72,10 +72,14 @@ class ParserModel(nn.Module):
         ###     Xavier Init: https://pytorch.org/docs/stable/nn.html#torch.nn.init.xavier_uniform_
         ###     Dropout: https://pytorch.org/docs/stable/nn.html#torch.nn.Dropout
 
-
+        self.embed_to_hidden = nn.Linear(self.embed_size*self.n_features,self.hidden_size)
+        nn.init.xavier_uniform_(self.embed_to_hidden.weight)
+        self.dropout = nn.Dropout()
+        self.hidden_to_logits = nn.Linear(self.hidden_size,self.n_classes)
+        nn.init.xavier_uniform_(self.hidden_to_logits.weight)
         ### END YOUR CODE
 
-    def embedding_lookup(self, t):
+    def embedding_lookup(self, t:torch.Tensor):
         """ Utilize `self.pretrained_embeddings` to map input `t` from input tokens (integers)
             to embedding vectors.
 
@@ -104,12 +108,14 @@ class ParserModel(nn.Module):
         ###     Embedding Layer: https://pytorch.org/docs/stable/nn.html#torch.nn.Embedding
         ###     View: https://pytorch.org/docs/stable/tensors.html#torch.Tensor.view
 
-
+        x = self.pretrained_embeddings(t) # x->(batch_size,n_features,embed_size)
+        # print(x.size())
+        x = x.view(x.size(0),-1)
         ### END YOUR CODE
         return x
 
 
-    def forward(self, t):
+    def forward(self, t:torch.Tensor):
         """ Run the model forward.
 
             Note that we will not apply the softmax function here because it is included in the loss function nn.CrossEntropyLoss
@@ -141,7 +147,10 @@ class ParserModel(nn.Module):
         ###
         ### Please see the following docs for support:
         ###     ReLU: https://pytorch.org/docs/stable/nn.html?highlight=relu#torch.nn.functional.relu
+        # print('t_size\t',t.size())
+        x = self.embedding_lookup(t)
 
-
+        hidden = nn.functional.relu(self.embed_to_hidden(x))
+        logits = self.hidden_to_logits(hidden)
         ### END YOUR CODE
         return logits
