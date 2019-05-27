@@ -16,6 +16,9 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+def a():
+    pass
+
 
 def pad_sents(sents, pad_token):
     """ Pad list of sentences according to the longest sentence in the batch.
@@ -29,8 +32,8 @@ def pad_sents(sents, pad_token):
     sents_padded = []
 
     ### YOUR CODE HERE (~6 Lines)
-
-
+    max_length = np.max([len(sentence) for sentence in sents])
+    sents_padded = [sentence + [pad_token]*(max_length-len(sentence)) for sentence in sents]
     ### END YOUR CODE
 
     return sents_padded

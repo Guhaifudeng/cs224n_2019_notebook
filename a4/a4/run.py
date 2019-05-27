@@ -52,9 +52,10 @@ from nmt_model import Hypothesis, NMT
 import numpy as np
 from typing import List, Tuple, Dict, Set, Union
 from tqdm import tqdm
+# import utils.read_corpus as read_corpus
+# import utils.batch_iter as batch_iter
 from utils import read_corpus, batch_iter
 from vocab import Vocab, VocabEntry
-
 import torch
 import torch.nn.utils
 
@@ -322,7 +323,7 @@ def main():
     args = docopt(__doc__)
 
     # Check pytorch version
-    assert(torch.__version__ == "1.0.0"), "Please update your installation of PyTorch. You have {} and you should have version 1.0.0".format(torch.__version__)
+    # assert(torch.__version__ == "1.0.0"), "Please update your installation of PyTorch. You have {} and you should have version 1.0.0".format(torch.__version__)
 
     # seed the random number generators
     seed = int(args['--seed'])
