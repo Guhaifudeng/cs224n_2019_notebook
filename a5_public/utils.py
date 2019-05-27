@@ -40,8 +40,9 @@ def pad_sents_char(sents, char_pad_token):
     ###
     ###     You should NOT use the method `pad_sents()` below because of the way it handles
     ###     padding and unknown words.
-
-
+    max_length = np.max([len(sentence) for sentence in sents])
+    sents_padded_word = [sent + [[char_pad_token]*max_word_length]*(max_length-len(sent)) for sent in sents]
+    sents_padded = [[word[:21]+[char_pad_token]*(max_word_length - len(word)) for word in sent] for sent in sents_padded_word]
     ### END YOUR CODE
 
     return sents_padded
@@ -58,10 +59,9 @@ def pad_sents(sents, pad_token):
         Output shape: (batch_size, max_sentence_length)
     """
     sents_padded = []
-
     ### COPY OVER YOUR CODE FROM ASSIGNMENT 4
-
-
+    max_length = np.max([len(sentence) for sentence in sents])
+    sents_padded = [sentence + [pad_token] * (max_length - len(sentence)) for sentence in sents]
     ### END YOUR CODE FROM ASSIGNMENT 4
 
     return sents_padded
@@ -106,3 +106,5 @@ def batch_iter(data, batch_size, shuffle=False):
         tgt_sents = [e[1] for e in examples]
 
         yield src_sents, tgt_sents
+# if __name__ == '__main__':
+#     print(pad_sents_char(sents=[[[1,2,3],[1,2],[1]],[[3,2,1],[3,2],[3]]],char_pad_token=0))
