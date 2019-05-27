@@ -123,13 +123,13 @@ dmypy.json
 .pyre/
 
 # pdf
-*.pdf
+#*.pdf
 
 #data
 *_data
 data
 outputs
-
+*.json
 .idea/
 
 *.npy
