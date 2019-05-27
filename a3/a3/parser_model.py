@@ -74,7 +74,7 @@ class ParserModel(nn.Module):
 
         self.embed_to_hidden = nn.Linear(self.embed_size*self.n_features,self.hidden_size)
         nn.init.xavier_uniform_(self.embed_to_hidden.weight)
-        self.dropout = nn.Dropout()
+        self.dropout = nn.Dropout(dropout_prob)
         self.hidden_to_logits = nn.Linear(self.hidden_size,self.n_classes)
         nn.init.xavier_uniform_(self.hidden_to_logits.weight)
         ### END YOUR CODE
@@ -149,8 +149,8 @@ class ParserModel(nn.Module):
         ###     ReLU: https://pytorch.org/docs/stable/nn.html?highlight=relu#torch.nn.functional.relu
         # print('t_size\t',t.size())
         x = self.embedding_lookup(t)
-
         hidden = nn.functional.relu(self.embed_to_hidden(x))
+        hidden = self.dropout(hidden)
         logits = self.hidden_to_logits(hidden)
         ### END YOUR CODE
         return logits
