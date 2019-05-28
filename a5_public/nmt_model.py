@@ -98,7 +98,15 @@ class NMT(nn.Module):
         ###     - Add `source_padded_chars` for character level padded encodings for source
         ###     - Add `target_padded_chars` for character level padded encodings for target
         ###     - Modify calls to encode() and decode() to use the character level encodings
+        source_padded = self.vocab.src.to_input_tensor(source, device=self.device)   # Tensor: (src_len, b)
+        target_padded = self.vocab.tgt.to_input_tensor(target, device=self.device)   # Tensor: (tgt_len, b)
 
+        source_padded_chars = self.vocab.src.to_input_tensor_char(source, device=self.device)   # Tensor: (src_len, b)
+        target_padded_chars = self.vocab.tgt.to_input_tensor_char(target, device=self.device)   # Tensor: (tgt_len, b)
+        # print('src_size',source_padded_chars.size())
+        enc_hiddens, dec_init_state = self.encode(source_padded_chars, source_lengths)
+        enc_masks = self.generate_sent_masks(enc_hiddens, source_lengths)
+        combined_outputs = self.decode(enc_hiddens, enc_masks, dec_init_state, target_padded_chars)
 
         ### END YOUR CODE
 
@@ -146,6 +154,8 @@ class NMT(nn.Module):
         ### Except replace "self.model_embeddings.source" with "self.model_embeddings_source"
 
         X = self.model_embeddings_source(source_padded)
+        # print('X',X.size())
+        # print('source_len',len(source_lengths))
         packed_X = pack_padded_sequence(X , source_lengths , enforce_sorted=True)
         packed_enc_hiddens , (last_hiddens , last_cells) = self.encoder(
             packed_X)  # return (src_len,b,h*2),(1-layer*2-bi,hidden)
