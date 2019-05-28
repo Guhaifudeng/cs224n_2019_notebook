@@ -25,7 +25,7 @@ class CNN(nn.Module):
         X_conv = self.conv(X_trans)
         X_convout = self.max_pool(F.relu(X_conv))
         # print(X_convout.size())
-        input.squeeze()
+        # input.squeeze()
         X_cnn = X_convout.squeeze(2).view(in_shape[0],in_shape[1],-1)
         # print(X_cnn.size())
         return X_cnn

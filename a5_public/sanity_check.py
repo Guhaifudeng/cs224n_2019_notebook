@@ -176,6 +176,7 @@ def question_2d_sanity_check(decoder):
     inpt = torch.zeros(1, BATCH_SIZE, HIDDEN_SIZE, dtype=torch.float)
     initialStates = (inpt, inpt)
     device = decoder.char_output_projection.weight.device
+    print('init state',initialStates)
     decodedWords = decoder.decode_greedy(initialStates, device)
     assert(len(decodedWords) == BATCH_SIZE), "Length of decodedWords should be {} but is: {}".format(BATCH_SIZE, len(decodedWords))
     print("Sanity Check Passed for Question 2d: CharDecoder.decode_greedy()!")
