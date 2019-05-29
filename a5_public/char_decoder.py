@@ -156,7 +156,7 @@ class CharDecoder(nn.Module):
                     finished_flags[i] = True
                 if not finished_flags[i]:
                     output_word[i] += cur_batch_char[i]
-        print(output_word)
+        # print(output_word)
         return output_word
 
 
